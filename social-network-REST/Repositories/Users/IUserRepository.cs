@@ -10,5 +10,7 @@ namespace social_network_REST.Repositories.Users
     {
         User GetUser(Guid id);
         IEnumerable<User> GetUsers();
+        void Add(User user);
+        bool UserNameIsUnique(User user);
     }
 }

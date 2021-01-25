@@ -27,6 +27,32 @@ namespace social_network_REST.Controllers
             return _userRepository.GetUsers();
         }
 
+        [HttpGet]
+        [Route("{id:guid}")]
+        public ActionResult<User> GetUser(Guid id)
+        {
+            try
+            {
+                return _userRepository.GetUser(id);
+            }
+            catch (ArgumentException)
+            {
+                return NotFound(id);
+            }
+        }
 
+        [HttpPost]
+        public ActionResult<User> CreateUser(User user)
+        {
+            try
+            {
+                _userRepository.Add(user);
+                return user;
+            }
+            catch (UserException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

@@ -13,14 +13,12 @@ namespace social_network_REST.Repositories.Users
         {
             var user = new User
             {
-                Id = Guid.NewGuid(),
                 UserName = "Pelle",
                 Email = "Pelle@gmail.com"
 
             };
             var user1 = new User
             {
-                Id = Guid.NewGuid(),
                 UserName = "Anders",
                 Email = "Anders@gmail.com"
 
@@ -37,6 +35,24 @@ namespace social_network_REST.Repositories.Users
         public User GetUser(Guid id)
         {
             return _users[id];
+        }
+
+        public void Add(User user)
+        {
+            if (UserNameIsUnique(user))
+            {
+                throw new NonUniqueUserName();
+            }
+            if (_users.ContainsKey(user.Id))
+            {
+                throw new NonUniqueId();
+            }
+            _users.Add(user.Id, user);
+        }
+
+        public bool UserNameIsUnique(User user)
+        {
+            return _users.Any(e => e.Value.UserName == user.UserName);
         }
     }
 }
