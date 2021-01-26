@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using social_network_REST.Repositories.Users;
+using social_network_REST.Repositories.Posts;
 
 namespace social_network_REST
 {
@@ -30,6 +31,7 @@ namespace social_network_REST
                 AddNewtonsoftJson();
            
             services.AddSingleton<IUserRepository, DictionaryUserRepository>();
+            services.AddSingleton<IPostRepository, DictionaryPostRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

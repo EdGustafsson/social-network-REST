@@ -54,5 +54,7 @@ namespace social_network_REST.Repositories.Users
         {
             return _users.Any(e => e.Value.UserName == user.UserName);
         }
+
+
     }
 }
