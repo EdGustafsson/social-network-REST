@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using social_network_REST.Models.Posts;
+using social_network_REST.Dtos.Posts;
+using social_network_REST.Repositories.Users;
 
 namespace social_network_REST.Repositories.Posts
 {
@@ -15,19 +17,25 @@ namespace social_network_REST.Repositories.Posts
             return _posts.Select(e => e.Value);
         }
 
-        public void Add(Post post)
+        public Post Add(PostDto postDto)
         {
+
+            var post = new Post(postDto);
+
             _posts.Add(post.Id, post);
+            return post;
         }
 
-        //public void Delete(Post post)
-        //{
-        //    _posts.Remove(post.Id);
-        //}
+        public void Delete(Post post)
+        {
+            _posts.Remove(post.Id);
+        }
 
         public Post GetPost(Guid id)
         {
-            return _posts[id];
+            
+            _posts.TryGetValue(id, out Post result);
+            return result;
         }
 
         public void ApplyPatch(Post post, Dictionary<string, object> patches)
@@ -57,7 +65,7 @@ namespace social_network_REST.Repositories.Posts
 
         public void UnlikePost(Post post, Guid userId)
         {
-            throw new NotImplementedException();
+            post.Likes.Remove(userId);
         }
     }
 }
