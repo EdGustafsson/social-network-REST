@@ -12,6 +12,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using social_network_REST.Repositories.Users;
 using social_network_REST.Repositories.Posts;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
 
 namespace social_network_REST
 {
@@ -30,8 +33,31 @@ namespace social_network_REST
             services.AddControllers().
                 AddNewtonsoftJson();
            
+            
+
+            services.AddSwaggerGen(e =>
+            {
+                e.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Social Network API",
+                    Description = "A Social Network API ",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Edwin Gustafsson",
+                        Email = "edwingustafsson@hotmail.com",
+                        Url = new Uri("https://github.com/edgustafsson")
+                    }
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                e.IncludeXmlComments(xmlPath);
+            });
+
             services.AddSingleton<IUserRepository, DictionaryUserRepository>();
             services.AddSingleton<IPostRepository, DictionaryPostRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +70,16 @@ namespace social_network_REST
 
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(e =>
+            {
+                e.SwaggerEndpoint("/swagger/v1/swagger.json,", "Social Network API V1");
+            }
+            );
+
+
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -52,6 +88,9 @@ namespace social_network_REST
             {
                 endpoints.MapControllers();
             });
+
+            
+
         }
     }
 }
