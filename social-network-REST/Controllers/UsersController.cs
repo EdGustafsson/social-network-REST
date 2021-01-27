@@ -10,8 +10,13 @@ using social_network_REST.Dtos.Users;
 
 namespace social_network_REST.Controllers
 {
+
+    /// <summary>
+    /// Controller for working with the Users
+    /// </summary>
     [ApiController]
     [Route("api/users")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class UsersController : ControllerBase
     {
 
@@ -22,12 +27,22 @@ namespace social_network_REST.Controllers
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Fetches all Users.
+        /// </summary>
+        /// <response code="200">Returns all Users</response>
         [HttpGet]
         public IEnumerable<User> GetUsers()
         {
             return _userRepository.GetUsers();
         }
 
+        /// <summary>
+        /// Fetches a User based on the given id.
+        /// </summary>
+        /// <param name="id">This is an id of an existing User</param>
+        /// <response code="200">Returns the User with the given Id</response>
+        /// <response code="404">No User with the given Id found </response>
         [HttpGet]
         [Route("{id:guid}")]
         public ActionResult<User> GetUser(Guid id)
@@ -41,6 +56,12 @@ namespace social_network_REST.Controllers
 
         }
 
+        /// <summary>
+        /// Creates a new user, using the userDto.
+        /// </summary>
+        /// <param name="userDto">This is a new User object</param>
+        /// <response code="201">Successfully created a new User</response>
+        /// <response code="400">Failed to create a new User</response>
         [HttpPost]
         public ActionResult<User> CreateUser(UserDto userDto)
         {
