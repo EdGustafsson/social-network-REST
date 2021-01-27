@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using social_network_REST.Repositories.Users;
 using social_network_REST.Models.Users;
+using social_network_REST.Dtos.Users;
 
 namespace social_network_REST.Controllers
 {
@@ -31,22 +32,21 @@ namespace social_network_REST.Controllers
         [Route("{id:guid}")]
         public ActionResult<User> GetUser(Guid id)
         {
-            try
-            {
-                return _userRepository.GetUser(id);
-            }
-            catch (ArgumentException)
-            {
-                return NotFound(id);
-            }
+
+            var user = _userRepository.GetUser(id);
+
+            if (user is null)
+                return NotFound(user);
+            return user;
+
         }
 
         [HttpPost]
-        public ActionResult<User> CreateUser(User user)
+        public ActionResult<User> CreateUser(UserDto userDto)
         {
             try
             {
-                _userRepository.Add(user);
+                var user = _userRepository.Add(userDto);
                 return user;
             }
             catch (UserException e)
